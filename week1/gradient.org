@@ -1,0 +1,28 @@
+* 全批量梯度下降算法
+** 建立如下最小的二乘线性回归模型
+   \(y=\beta_{0}+\beta_{1} x\)
+** 最小二乘法的损失函数 $L(\beta)$ 为  
+   \(L(\beta)=\frac{1}{N} \sum_{j=1}^{N}\left(y_{j}-\hat{y}_{j}\right)^{2}=\sum_{j=1}^{N} \frac{1}{N}\left(\beta_{0}+\beta_{1} x_{j}-\hat{y}_{j}\right)^{2}\)
+** 损失函数的 $L(\beta)$ 的梯度 
+   \(\nabla L=\left(\frac{\partial L}{\partial \beta_{0}}, \frac{\partial L}{\partial \beta_{1}}\right)=\left(\frac{2}{N} \sum_{j=1}^{N}\left(\beta_{0}+\beta_{1} x_{j}-\hat{y}_{j}\right), \frac{2}{N} \sum_{j=1}^{N} x_{j}\left(\beta_{0}+\beta_{1} x_{j}-\hat{y}_{j}\right)\right)\)
+** 梯度下降法的步骤
+*** 当 $i=0$,自己设置初始点 $\beta^{0}=\left(\beta_{0}^{0}, \beta_{1}^{0}\right)$ ， 设置步长（也就是学习率 $\alpha$ ), 设置迭代终止的误差忍耐度 $tol$ 。
+*** 计算代价函数 $L(\beta)$ 在点 $(\beta_{0}^{i}, \beta_{1}^{i})$ 上的梯度 $\nabla L_{\beta^{i}}$
+*** 计算 $\beta^{i+1}$ , 公式如下
+    \(\beta^{i+1}=\beta^{i}-\alpha \nabla L_{\beta^{i}}\)
+*** 计算梯度 $\nabla L_{\beta^{i+1}}$ , 如果梯度的二范数 $\left\|\nabla L_{\beta^{i+1}}\right\|_{2}$ 小于等于 $tol$ ,则迭代停止，最优解的取值为 $\beta^{i+1}$ ;如果它大于 $tol$, 那么 $i=i+1$ , 并返回第三步。
+
+
+* 随机梯度下降算法
+  随机梯度下降算法(Stochastic Gradient Decent, SGD) 是对全批量梯度下降算法计算效率的改进算法。本质上来说，我们预期随机梯度下降法得到的
+结果和全批量梯度下降法相接近; SGD的优势是更快地计算梯度
+** 回顾全批量梯度下降算法如何计算每次迭代中的梯度
+   \[\nabla L=\left(\frac{\partial L}{\partial \beta_{0}}, \frac{\partial L}{\partial \beta_{1}}\right)=\left(\frac{2}{N} \sum_{j=1}^{N}\left(\beta_{0}+\beta_{1} x_{j}-\hat{y}_{j}\right), \frac{2}{N} \sum_{j=1}^{N} x_{j}\left(\beta_{0}+\beta_{1} x_{j}-\hat{y}_{j}\right)\right)
+\]
+全批量梯度下降算法的代价是 $O(N)$ ,运算次数与 $N$ 成线性关系, 而随机梯度下降法能将计算一次梯度的代价降低到 $O(1)$ ,也就是运算次数为常数次，与 $N$ 无关。所以SGD特别适合大训练样本的计算。
+** SGD在计算 $\nabla L$ 时，并不使用全部样本，而是随机地挑选了一个样本 $\left(\boldsymbol{x}_{r}, \hat{\boldsymbol{y}}_{r}\right)$
+\[\nabla L=\left(\frac{\partial L}{\partial \beta_{0}}, \frac{\partial L}{\partial \beta_{1}}\right)=\left(2\left(\beta_{0}+\beta_{1} x_{r}-\hat{y}_{r}\right), 2 x_{r}\left(\beta_{0}+\beta_{1} x_{r}-\hat{y}_{r}\right)\right)\]
+
+* 小批量随机梯度下降算法
+小批量随机梯度下降算法(Mini-batch Stochastic Gradient Decent)是对速度和稳定性进行妥协后的产物。小批量随机梯度下降算法的关键思想是，我们不是随机使用一个样本，而是随机使用 $b$ 个不同的样本。梯度的计算如下：
+\[\nabla L=\left(\frac{\partial L}{\partial \beta_{0}}, \frac{\partial L}{\partial \beta_{1}}\right)=\left(\frac{2}{b} \sum_{r=1}^{b}\left(\beta_{0}+\beta_{1} x_{j_{r}}-\hat{y}_{j_{r}}\right), \frac{2}{b} \sum_{r=1}^{b} x_{j_{r}}\left(\beta_{0}+\beta_{1} x_{j_{r}}-\hat{y}_{j_{r}}\right)\right)\]
